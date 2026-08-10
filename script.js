@@ -287,88 +287,89 @@ async function getWeather() {
 
   showToast("Đang tra cứu thời tiết...", "waiting");
 
-  // --- TH1: (open weather api) ---
-  try {
-    const API_KEY = "8481a8dc5b906df58cc9473b06115f89";
-    const owmUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=vi`;
-
-    const resOWM = await fetch(owmUrl);
-
-    if (!resOWM.ok) {
-      throw new Error("OpenWeatherMap thất bại");
-    }
-
-    const data = await resOWM.json();
-
-    document.getElementById("wCity").innerText = data.name;
-    document.getElementById("wTemp").innerText =
-      `${Math.round(data.main.temp)}°C`;
-    document.getElementById("wHumidity").innerText = data.main.humidity;
-    document.getElementById("wWind").innerText = Math.round(
-      data.wind.speed * 3.6,
-    );
-    document.getElementById("wDesc").innerText = data.weather[0].description;
-
-    const iconCode = data.weather[0].icon;
-    document.getElementById("wIcon").src =
-      `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
-    document.getElementById("wIcon").style.display = "block"; // Hiện icon
-
-    document.getElementById("weatherResult").style.display = "block";
-    showToast("Lấy dữ liệu thành công!", "success");
-  } catch (errorOWM) {
-    // --- TH2: Sử dụng Geocoding + Open Meteo ---
-    console.warn("API chính lỗi, đang chuyển sang API dự phòng...", errorOWM);
-
+    // --- TH1: Sử dụng OpenWeatherMap ---
     try {
-      // 1. Dùng Geocoding để lấy Toạ độ
-      const geoRes = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`,
-      );
-      if (!geoRes.ok) throw new Error("Mất kết nối mạng");
+      // Cất API Key vào biến / lấy từ window.env nếu có (hoặc fallback)
+      const API_KEY = (typeof window !== 'undefined' && window.env && window.env.OPENWEATHER_API_KEY) 
+        ? window.env.OPENWEATHER_API_KEY 
+        : "8481a8dc5b906df58cc9473b06115f89";
+      const owmUrl = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(city)}&appid=${API_KEY}&units=metric&lang=vi`;
 
-      const geoData = await geoRes.json();
-      if (!geoData.results || geoData.results.length === 0) {
-        throw new Error("Sai tên thành phố. Không tìm thấy!");
+      const resOWM = await fetch(owmUrl);
+
+      if (!resOWM.ok) {
+        throw new Error("OpenWeatherMap thất bại");
       }
 
-      const lat = geoData.results[0].latitude;
-      const lon = geoData.results[0].longitude;
-      const cityName = geoData.results[0].name;
+      const data = await resOWM.json();
 
-      // 2. Dùng Weather API của Open-Meteo (Có gọi thêm tham số độ ẩm để khớp giao diện)
-      const weatherRes = await fetch(
-        `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`,
-      );
-      if (!weatherRes.ok)
-        throw new Error("Lỗi tải thời tiết từ máy chủ dự phòng");
-
-      const weatherData = await weatherRes.json();
-      const current = weatherData.current;
-
-      // 3. Hiển thị dữ liệu API dự phòng
-      document.getElementById("wCity").innerText = cityName;
-      // document.getElementById("wTemp").innerText = document.getElementById(
-      //   "wDesc",
-      // ).innerText = " ";
-      `${Math.round(current.temperature_2m)}°C`;
-      document.getElementById("wHumidity").innerText =
-        current.relative_humidity_2m;
+      document.getElementById("wCity").innerText = data.name;
+      document.getElementById("wTemp").innerText =
+        `${Math.round(data.main.temp)}°C`;
+      document.getElementById("wHumidity").innerText = data.main.humidity;
       document.getElementById("wWind").innerText = Math.round(
-        current.wind_speed_10m,
+        data.wind.speed * 3.6,
       );
+      document.getElementById("wDesc").innerText = data.weather[0].description;
 
-      // Ẩn icon vì Open-Meteo không có sẵn icon như OWM
-      document.getElementById("wIcon").style.display = "none";
+      const iconCode = data.weather[0].icon;
+      document.getElementById("wIcon").src =
+        `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
+      document.getElementById("wIcon").style.display = "block"; // Hiện icon
 
       document.getElementById("weatherResult").style.display = "block";
       showToast("Lấy dữ liệu thành công!", "success");
-    } catch (errorMeteo) {
-      showToast(errorMeteo.message, "error");
-      document.getElementById("weatherResult").style.display = "none";
+    } catch (errorOWM) {
+      // --- TH2: Sử dụng Geocoding + Open Meteo ---
+      console.warn("API chính lỗi, đang chuyển sang API dự phòng...", errorOWM);
+
+      try {
+        // 1. Dùng Geocoding để lấy Toạ độ
+        const geoRes = await fetch(
+          `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1`,
+        );
+        if (!geoRes.ok) throw new Error("Mất kết nối mạng");
+
+        const geoData = await geoRes.json();
+        if (!geoData.results || geoData.results.length === 0) {
+          throw new Error("Sai tên thành phố. Không tìm thấy!");
+        }
+
+        const lat = geoData.results[0].latitude;
+        const lon = geoData.results[0].longitude;
+        const cityName = geoData.results[0].name;
+
+        // 2. Dùng Weather API của Open-Meteo (Có gọi thêm tham số độ ẩm để khớp giao diện)
+        const weatherRes = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,wind_speed_10m`,
+        );
+        if (!weatherRes.ok)
+          throw new Error("Lỗi tải thời tiết từ máy chủ dự phòng");
+
+        const weatherData = await weatherRes.json();
+        const current = weatherData.current;
+
+        // 3. Hiển thị dữ liệu API dự phòng
+        document.getElementById("wCity").innerText = cityName;
+        document.getElementById("wTemp").innerText = `${Math.round(current.temperature_2m)}°C`;
+        document.getElementById("wDesc").innerText = "Thời tiết (Dự phòng)";
+        document.getElementById("wHumidity").innerText =
+          current.relative_humidity_2m;
+        document.getElementById("wWind").innerText = Math.round(
+          current.wind_speed_10m,
+        );
+
+        // Ẩn icon vì Open-Meteo không có sẵn icon như OWM
+        document.getElementById("wIcon").style.display = "none";
+
+        document.getElementById("weatherResult").style.display = "block";
+        showToast("Lấy dữ liệu thành công!", "success");
+      } catch (errorMeteo) {
+        showToast(errorMeteo.message, "error");
+        document.getElementById("weatherResult").style.display = "none";
+      }
     }
   }
-}
 
 document.addEventListener("DOMContentLoaded", function () {
   document
