@@ -1,0 +1,465 @@
+/* --- 1. CSS VARIABLES (Liquid Glass Design System) --- */
+:root {
+  --bg-overlay: rgba(73, 96, 87, 0.1);
+  --glass-bg: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.25) 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  --glass-border: 1px solid rgba(255, 255, 255, 0.2);
+
+  --glass-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+  --input-bg: rgba(255, 255, 255, 0.03);
+  --input-bg-focus: rgba(255, 255, 255, 0.08);
+  --text-color: #ffffff;
+  --label-active: #ffffff;
+  --label-inactive: rgba(255, 255, 255, 0.6);
+
+  /* Toast Notification Color */
+  --toast-error-bg: linear-gradient(
+    135deg,
+    rgba(186, 26, 26, 0.25) 0%,
+    rgba(186, 26, 26, 0.08) 100%
+  );
+  --toast-error-border: 1px solid rgba(186, 26, 26, 0.45);
+
+  --toast-success-bg: linear-gradient(
+    135deg,
+    rgba(70, 72, 212, 0.25) 0%,
+    rgba(70, 72, 212, 0.08) 100%
+  );
+  --toast-success-border: 1px solid rgba(70, 72, 212, 0.45);
+
+  --toast-waiting-bg: linear-gradient(
+    135deg,
+    rgba(255, 255, 150, 0.25) 0%,
+    rgba(255, 255, 150, 0.08) 100%
+  );
+  --toast-waiting-border: 1px solid rgba(255, 255, 150, 0.45);
+}
+
+/* --- 2. GLOBAL STYLES --- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Montserrat", sans-serif;
+}
+.lobster-regular,
+.lobster-regular * {
+  font-family: "Lobster", sans-serif !important;
+}
+body {
+  min-height: 100vh;
+  background-image: url("img/wallpaper.jpg");
+  background-size: contain;
+  background-position: center;
+  background-attachment: fixed;
+  color: var(--text-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+  overflow-x: hidden;
+}
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--bg-overlay);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  z-index: -1;
+}
+
+/* --- 3. GLASS PANEL SYSTEM --- */
+.glass-panel {
+  background: var(--glass-bg);
+  border: var(--glass-border);
+  box-shadow: var(--glass-shadow);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border-radius: 40px;
+  width: 100%;
+  max-width: 1400px;
+  min-height: 600px;
+  padding: 48px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-y: auto;
+}
+
+h1,
+h2,
+h3 {
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.brand {
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  text-align: center;
+  opacity: 0.8;
+}
+
+/* --- 4. TABBED NAVIGATION --- */
+.tabs-header {
+  display: flex;
+  position: relative;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.tab-btn {
+  text-transform: uppercase;
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--label-inactive);
+  padding: 12px 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  display: block; /* Click target expansion */
+}
+
+.tab-btn.active {
+  color: var(--label-active);
+  font-weight: 500;
+}
+
+.tab-slider {
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: #ffffff;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  width: 20%; /* 5 tabs = 20% each */
+}
+
+/* Tab Content Containers */
+.tab-content {
+  display: none;
+  animation: fadeIn 0.6s ease;
+  flex: 1;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- 5. FORMS & INPUTS (Floating Labels) --- */
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+.form-grid.single {
+  grid-template-columns: 1fr;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.input-group {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.glass-input,
+.glass-select {
+  width: 100%;
+  background: var(--input-bg);
+  border: none;
+  color: var(--text-color);
+  padding: 24px 12px 8px 12px;
+  font-size: 1rem;
+  font-weight: 300;
+  outline: none;
+  transition: all 0.3s ease;
+  border-radius: 8px 8px 0 0;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  cursor: pointer;
+}
+
+.glass-select:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  background-color: rgba(255, 255, 255, 0.01);
+}
+.glass-select:disabled ~ .glass-label {
+  opacity: 0.5;
+}
+.glass-input:focus,
+.glass-select:focus {
+  background: var(--input-bg-focus);
+}
+
+.glass-label {
+  position: absolute;
+  left: 12px;
+  top: 18px;
+  color: var(--label-inactive);
+  font-size: 1rem;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+/* Floating label active state */
+.glass-input:focus ~ .glass-label,
+.glass-input:valid ~ .glass-label,
+.glass-select:focus ~ .glass-label,
+.glass-select:valid ~ .glass-label {
+  top: 6px;
+  font-size: 0.75rem;
+  color: var(--label-active);
+}
+
+.glass-input[type="date"]::-webkit-datetime-edit {
+  color: transparent;
+}
+
+.glass-input[type="date"]:focus::-webkit-datetime-edit,
+.glass-input[type="date"]:valid::-webkit-datetime-edit {
+  color: var(--text-color);
+}
+
+.glass-input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+  transform: translateY(-6px);
+  width: 20px;
+  height: 20px;
+}
+
+/* Select styling tweaks */
+.glass-select option {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+/* Button */
+.glass-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 12px 24px;
+  border-radius: 20px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  margin-top: 1rem;
+}
+.glass-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* --- 6. ASSIGNMENT STYLES --- */
+
+/* --- BÀI 1: Zodiac --- */
+.zodiac-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+  margin-top: 2rem;
+}
+
+.zodiac-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.zodiac-img,
+.zodiac-chinese-img {
+  width: 152px !important;
+  height: 152px !important;
+  border: 7px solid rgba(255, 255, 255, 0.03);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  margin: 0 auto 20px auto !important;
+  display: block;
+}
+
+.zodiac-img {
+  object-fit: cover;
+  object-position: center;
+}
+
+.zodiac-chinese-img {
+  background-image: url("img/zodiac_chinese_animal_12.jpg");
+  background-size: 612px 459px;
+  background-repeat: no-repeat;
+  background-clip: content-box;
+}
+
+.zodiac-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 0;
+  padding: 0;
+  line-height: 1.4;
+}
+
+/* Bài 2: Users Grid */
+
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1rem;
+  max-height: auto;
+  overflow-y: auto;
+  padding: 15px;
+}
+
+.user-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 15px;
+  padding: 15px;
+  text-align: center;
+  transition: transform 0.3s ease;
+}
+.user-card:hover {
+  transform: translateY(-10px);
+  background: rgba(255, 255, 255, 0.1);
+}
+.loading {
+  width: 100%;
+  text-align: center;
+  font-size: 1.2rem;
+  color: var(--text-color);
+  margin-top: 20px;
+}
+.user-card img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+.user-card h4 {
+  font-size: 1rem;
+  margin-bottom: 5px;
+}
+.user-card p {
+  font-size: 0.8rem;
+  color: var(--label-inactive);
+  word-break: break-all;
+}
+
+/* Bài 4: Weather */
+.weather-card {
+  margin-top: 2rem;
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0)
+  );
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: auto;
+  display: none;
+}
+.weather-temp {
+  font-size: 4rem;
+  font-weight: 700;
+  margin: 10px 0;
+}
+.weather-desc {
+  font-size: 1.2rem;
+  color: var(--label-inactive);
+}
+
+/* --- 7. TOAST NOTIFICATIONS --- */
+#toast-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.toast {
+  padding: 15px 25px;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  backdrop-filter: blur(10px);
+  transform: translateX(120%);
+  animation: slideInToast 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+.toast.waiting {
+  background: var(--toast-waiting-bg);
+  border: var(--toast-waiting-border);
+  color: var(--text-color);
+}
+.toast.error {
+  background: var(--toast-error-bg);
+  border: var(--toast-error-border);
+}
+.toast.success {
+  background: var(--toast-success-bg);
+  border: var(--toast-success-border);
+}
+
+@keyframes slideInToast {
+  to {
+    transform: translateX(0);
+  }
+}
+@keyframes fadeOutToast {
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Profile Section */
+.profile-box {
+  text-align: center;
+  padding: 2rem;
+}
+.profile-box h2 {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+.profile-box p {
+  color: var(--label-inactive);
+  font-size: 1.1rem;
+  margin-bottom: 5px;
+}

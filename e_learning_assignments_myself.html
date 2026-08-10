@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>E-Learning</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="glass-panel">
+      <div class="brand" style="text-transform: uppercase">
+        Bài tập E-learning 03+04+05
+      </div>
+
+      <!-- Tab Navigation -->
+      <div class="tabs-header">
+        <button class="tab-btn active" onclick="switchTab(0, 'info')">
+          Thông tin Sinh viên
+        </button>
+        <button class="tab-btn" onclick="switchTab(1, 'bai1')">Bài 1</button>
+        <button class="tab-btn" onclick="switchTab(2, 'bai2')">Bài 2</button>
+        <button class="tab-btn" onclick="switchTab(3, 'bai3')">Bài 3</button>
+        <button class="tab-btn" onclick="switchTab(4, 'bai4')">Bài 4</button>
+        <div class="tab-slider" id="tabSlider"></div>
+      </div>
+
+      <!-- TAB: Thông tin sinh viên -->
+      <div
+        id="info"
+        class="tab-content active lobster-regular"
+        style="text-transform: uppercase; letter-spacing: 5px; font-size: 100px"
+      >
+        <div class="profile-box">
+          <h2>Trần Trung Nam</h2>
+          <p>Mã sinh viên: 087205007981</p>
+          <p>Lớp: [010412103103] - Lập trình Web - CLC CNTT</p>
+        </div>
+      </div>
+
+      <!-- TAB: Bài 1 - Hoàng Đạo & Can Chi -->
+      <div id="bai1" class="tab-content">
+        <h2 style="text-align: center; margin-bottom: 2rem">
+          Tra cứu Cung Hoàng Đạo
+        </h2>
+        <div class="form-grid single">
+          <div class="input-group">
+            <input type="date" id="dobInput" class="glass-input" required />
+            <label class="glass-label">Ngày tháng năm sinh</label>
+          </div>
+          <button class="glass-btn" onclick="zodiacCalculator()">
+            Tra cứu ngay
+          </button>
+        </div>
+
+        <div id="zodiacResult" class="zodiac-result" style="display: none">
+          <div class="zodiac-grid">
+            <div class="zodiac-col">
+              <div id="zodiacIllustration"></div>
+              <h3 id="zodiacName" class="zodiac-title"></h3>
+            </div>
+            <div class="zodiac-col">
+              <div id="chineseIllustration"></div>
+              <p id="canchiText" class="zodiac-title"></p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB: Bài 2 - Random Users -->
+      <div id="bai2" class="tab-content">
+        <div
+          style="
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+          "
+        >
+          <h2 style="margin-bottom: 0">
+            Danh bạ người dùng ngẫu nhiên (Random User Gallery)
+          </h2>
+          <button
+            class="glass-btn"
+            style="width: auto; margin-top: 0"
+            onclick="loadUsers()"
+          >
+            Làm mới
+          </button>
+        </div>
+        <div id="userGrid" class="user-grid"></div>
+      </div>
+
+      <!-- TAB: Bài 3 - Cư trú -->
+      <!-- 
+        - Form có đầy đủ ô nhập thông tin cá nhân.
+        - Phần địa chỉ cư trú: cho người dùng chọn từ danh sách tỉnh từ API, sau khi chọn tỉnh thì cho người dùng chọn Xã theo tỉnh tương ứng đã chọn.
+      -->
+
+      <div id="bai3" class="tab-content">
+        <h2>Đăng ký thông tin cư trú cho công dân.</h2>
+        <div class="form-grid">
+          <div class="input-group">
+            <input type="text" class="glass-input" required />
+            <label class="glass-label">Họ và tên</label>
+          </div>
+          <div class="input-group">
+            <input type="text" class="glass-input" required />
+            <label class="glass-label">Số CCCD</label>
+          </div>
+          <div class="input-group">
+            <select
+              id="provinceSelect"
+              class="glass-select"
+              onchange="loadDistricts()"
+              required
+            >
+              <option value="" disabled selected hidden></option>
+            </select>
+            <label class="glass-label">Tỉnh / Thành phố</label>
+          </div>
+          <div class="input-group">
+            <select
+              id="districtSelect"
+              class="glass-select"
+              onchange="loadWards()"
+              disabled
+              required
+            >
+              <option value="" disabled selected hidden></option>
+            </select>
+            <label class="glass-label">Quận / Huyện</label>
+          </div>
+
+          <div class="input-group" style="grid-column: 1 / -1">
+            <select id="wardSelect" class="glass-select" disabled required>
+              <option value="" disabled selected hidden></option>
+            </select>
+            <label class="glass-label">Phường / Xã</label>
+          </div>
+        </div>
+        <button
+          class="glass-btn"
+          style="max-width: 200px; margin: 1rem auto; display: block"
+          onclick="showToast('Đăng ký thành công!', 'success')"
+        >
+          Gửi Đăng ký
+        </button>
+      </div>
+
+      <!-- TAB: Bài 4 - Weather App -->
+      <div id="bai4" class="tab-content">
+        <h2 style="text-align: center; margin: 2rem">
+          Thời tiết thu nhỏ (Mini Weather App)
+        </h2>
+        <div class="form-grid single">
+          <div class="input-group">
+            <input type="text" id="cityInput" class="glass-input" required />
+            <label class="glass-label"
+              >Nhập tên thành phố (Vd: Hanoi, Tokyo)</label
+            >
+          </div>
+          <button class="glass-btn" onclick="getWeather()">
+            Xem thời tiết
+          </button>
+        </div>
+        <div id="weatherResult" class="weather-card" style="display: none">
+          <h3 id="wCity">Hà Nội</h3>
+          <img
+            id="wIcon"
+            src=""
+            alt="Thời tiết"
+            style="display: none; margin: 0 auto; width: 100px"
+          />
+          <div class="weather-temp" id="wTemp">25°C</div>
+
+          <p class="weather-desc">
+            <span
+              id="wDesc"
+              style="
+                text-transform: capitalize;
+                display: block;
+                margin-bottom: 5px;
+                color: white;
+              "
+              >Trời quang</span
+            >
+            Độ ẩm: <span id="wHumidity">80</span>% <br />
+            Tốc độ gió: <span id="wWind">10</span> km/h
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+    <script src="script.js"></script>
+  </body>
+</html>
