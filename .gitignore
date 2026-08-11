@@ -1,4 +1,3 @@
-_myself/
-
+node_modules/
 .env
-
+_myself/

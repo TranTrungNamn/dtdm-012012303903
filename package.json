@@ -1,0 +1,24 @@
+{
+  "name": "dientoandammay-012012303903-nhom5",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/dien-toan-dam-may-012012303903/dientoandammay-012012303903-nhom5.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/dien-toan-dam-may-012012303903/dientoandammay-012012303903-nhom5/issues"
+  },
+  "homepage": "https://gitlab.com/dien-toan-dam-may-012012303903/dientoandammay-012012303903-nhom5#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1"
+  }
+}
