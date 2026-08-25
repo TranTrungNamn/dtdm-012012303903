@@ -66,7 +66,7 @@ app.listen(PORT, "0.0.0.0", () => {
 
   if (isRender) {
     // Log ngắn gọn, sạch đẹp chuẩn Cloud / Render
-    console.log(`[PAAS - RENDER] 🚀 ${appName} is running on port ${PORT} (${env})`);
+    console.log(`[PAAS - RENDER] ${appName} is running on port ${PORT} (${env})`);
   } else {
     // Log dạng bảng đẹp mắt khi phát triển ở máy cá nhân (Local)
     const localUrl = `http://localhost:${PORT}`;
