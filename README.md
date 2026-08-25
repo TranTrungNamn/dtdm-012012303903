@@ -16,22 +16,22 @@ Sẽ sử dụng Render
 
 ### 📋 Danh sách công việc cần thực hiện (Checklist)
 
-- [ ] **Xây dựng ứng dụng:**
+- [x] **Xây dựng ứng dụng:**
   - [x] Thiết kế backend web service đơn giản bằng Node.js / Express.
-  - [ ] Xây dựng giao diện Frontend và tích hợp các API chức năng.
-- [ ] **Quản lý cấu hình & Biến môi trường:**
-  - [ ] Thiết lập file `.env` và `.env.example` và môi trường chạy.
-  - [ ] Ẩn toàn bộ thông tin nhạy cảm khỏi kho mã nguồn Git.
-- [ ] **Triển khai ứng dụng lên nền tảng Cloud PaaS:**
-  - [ ] Đẩy mã nguồn lên hệ thống quản lý phiên bản (GitLab).
-  - [ ] Kết nối kho mã nguồn GitLab với nền tảng Cloud PaaS Render.
-  - [ ] Cấu hình Web Service, Build Command (`npm install`) và Start Command (`npm start`) trên Render.
-  - [ ] Thiết lập các biến môi trường trực tiếp trên bảng điều khiển Render Dashboard.
-  - [ ] Thiết lập quy trình CI/CD tự động build & test qua `.gitlab-ci.yml`.
-- [ ] **Kiểm thử ứng dụng (Testing):**
-  - [ ] Kiểm thử chức năng và giao diện người dùng trên trình duyệt (Local & Cloud).
-  - [ ] Viết bộ kịch bản kiểm thử tự động API bằng Postman Collection / Newman.
-  - [ ] Thực hiện kiểm thử endpoint `/api/health` và `/api/weather` (trường hợp thành công, thiếu tham số, không tìm thấy).
+  - [x] Xây dựng giao diện Frontend (Glassmorphism) và tích hợp các API chức năng.
+- [x] **Quản lý cấu hình & Biến môi trường:**
+  - [x] Thiết lập file `.env` và `.env.example` quản lý biến môi trường.
+  - [x] Ẩn toàn bộ thông tin nhạy cảm khỏi kho mã nguồn Git qua `.gitignore`.
+- [x] **Triển khai ứng dụng lên nền tảng Cloud PaaS:**
+  - [x] Đẩy mã nguồn lên hệ thống quản lý phiên bản (GitHub & GitLab).
+  - [x] Kết nối kho mã nguồn GitHub với nền tảng Cloud PaaS Render.
+  - [x] Cấu hình Web Service, Build Command (`npm install`) và Start Command (`npm start`) trên Render.
+  - [x] Thiết lập các biến môi trường trực tiếp trên bảng điều khiển Render Dashboard.
+  - [x] Thiết lập quy trình CI/CD tự động build & test qua GitHub Actions (`.github/workflows/ci-cd.yml`).
+- [x] **Kiểm thử ứng dụng (Testing):**
+  - [x] Kiểm thử chức năng và giao diện người dùng trên trình duyệt (Local & Cloud).
+  - [x] Viết bộ kịch bản kiểm thử tự động API bằng Postman Collection / Newman (`12/12 Assertions Passed`).
+  - [x] Thực hiện kiểm thử endpoint `/api/health` và `/api/weather` (trường hợp thành công, thiếu tham số, không tìm thấy).
 - [ ] **Đánh giá & Báo cáo:**
   - [ ] Đánh giá các lợi ích của mô hình PaaS (tốc độ triển khai, không cần quản trị server/hạ tầng, tự động hóa CI/CD, tiết kiệm chi phí).
   - [ ] Tổng hợp báo cáo và tài liệu hoàn chỉnh của bài tập lớn.
