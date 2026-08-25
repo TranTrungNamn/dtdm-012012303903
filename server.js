@@ -60,33 +60,42 @@ app.get("/api/weather", async (req, res) => {
 });
 
 app.listen(PORT, "0.0.0.0", () => {
+  const isRender = process.env.RENDER || process.env.NODE_ENV === "production";
   const env = process.env.NODE_ENV || "development";
-  const localUrl = `http://localhost:${PORT}`;
-  const networkUrl = `http://0.0.0.0:${PORT}`;
+  const appName = process.env.APP_NAME || "Cloud API Portal - Nhom 5";
 
-  const rows = [
-    ["Local URL", `\x1b[34m${localUrl}\x1b[0m`, localUrl],
-    ["Network URL", `\x1b[34m${networkUrl}\x1b[0m`, networkUrl],
-    ["Environment", `\x1b[33m${env}\x1b[0m`, env],
-    ["Port", `\x1b[35m${PORT}\x1b[0m`, String(PORT)],
-  ];
+  if (isRender) {
+    // Log ngắn gọn, sạch đẹp chuẩn Cloud / Render
+    console.log(`[PAAS - RENDER] 🚀 ${appName} is running on port ${PORT} (${env})`);
+  } else {
+    // Log dạng bảng đẹp mắt khi phát triển ở máy cá nhân (Local)
+    const localUrl = `http://localhost:${PORT}`;
+    const networkUrl = `http://0.0.0.0:${PORT}`;
 
-  const col1W = 14;
-  const col2W = 32;
-  const totalW = col1W + col2W + 3; // 49 chars inside box
+    const rows = [
+      ["Local URL", `\x1b[34m${localUrl}\x1b[0m`, localUrl],
+      ["Network URL", `\x1b[34m${networkUrl}\x1b[0m`, networkUrl],
+      ["Environment", `\x1b[33m${env}\x1b[0m`, env],
+      ["Port", `\x1b[35m${PORT}\x1b[0m`, String(PORT)],
+    ];
 
-  const title = "BTL DIEN TOAN DAM MAY - NHOM 5";
-  const titlePad = totalW - title.length;
+    const col1W = 14;
+    const col2W = 32;
+    const totalW = col1W + col2W + 3;
 
-  console.log("\n\x1b[36m┌" + "─".repeat(col1W + 2) + "┬" + "─".repeat(col2W + 2) + "┐\x1b[0m");
-  console.log(`\x1b[36m│\x1b[0m \x1b[1m\x1b[32m${title}\x1b[0m` + " ".repeat(titlePad + 1) + "\x1b[36m│\x1b[0m");
-  console.log("\x1b[36m├" + "─".repeat(col1W + 2) + "┼" + "─".repeat(col2W + 2) + "┤\x1b[0m");
+    const title = "BTL DIEN TOAN DAM MAY - NHOM 5";
+    const titlePad = totalW - title.length;
 
-  for (const [col1, col2Colored, col2Raw] of rows) {
-    const p1 = " ".repeat(Math.max(0, col1W - col1.length));
-    const p2 = " ".repeat(Math.max(0, col2W - col2Raw.length));
-    console.log(`\x1b[36m│\x1b[0m \x1b[1m${col1}\x1b[0m${p1} \x1b[36m│\x1b[0m ${col2Colored}${p2} \x1b[36m│\x1b[0m`);
+    console.log("\n\x1b[36m┌" + "─".repeat(col1W + 2) + "┬" + "─".repeat(col2W + 2) + "┐\x1b[0m");
+    console.log(`\x1b[36m│\x1b[0m \x1b[1m\x1b[32m${title}\x1b[0m` + " ".repeat(titlePad + 1) + "\x1b[36m│\x1b[0m");
+    console.log("\x1b[36m├" + "─".repeat(col1W + 2) + "┼" + "─".repeat(col2W + 2) + "┤\x1b[0m");
+
+    for (const [col1, col2Colored, col2Raw] of rows) {
+      const p1 = " ".repeat(Math.max(0, col1W - col1.length));
+      const p2 = " ".repeat(Math.max(0, col2W - col2Raw.length));
+      console.log(`\x1b[36m│\x1b[0m \x1b[1m${col1}\x1b[0m${p1} \x1b[36m│\x1b[0m ${col2Colored}${p2} \x1b[36m│\x1b[0m`);
+    }
+
+    console.log("\x1b[36m└" + "─".repeat(col1W + 2) + "┴" + "─".repeat(col2W + 2) + "┘\x1b[0m\n");
   }
-
-  console.log("\x1b[36m└" + "─".repeat(col1W + 2) + "┴" + "─".repeat(col2W + 2) + "┘\x1b[0m\n");
 });
