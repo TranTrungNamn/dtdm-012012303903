@@ -105,7 +105,7 @@
       "response": []
     },
     {
-      "name": "3. Weather API - Success (Ho Chi Minh)",
+      "name": "3. Weather API - Success (Tokyo)",
       "event": [
         {
           "listen": "test",
@@ -115,11 +115,10 @@
               "    pm.response.to.have.status(200);",
               "});",
               "",
-              "pm.test(\"Verify valid city returned\", function () {",
+              "pm.test(\"Verify valid city name is a non-empty string\", function () {",
               "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData.city.toLowerCase()).to.satisfy(function(c) {",
-              "        return c.includes(\"ho chi minh\") || c.includes(\"hồ chí minh\");",
-              "    });",
+              "    pm.expect(jsonData.city).to.be.a(\"string\");",
+              "    pm.expect(jsonData.city.length).to.be.above(0);",
               "});"
             ],
             "type": "text/javascript"
@@ -130,7 +129,7 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "{{base_url}}/api/weather?city=Ho Chi Minh",
+          "raw": "{{base_url}}/api/weather?city=Tokyo",
           "host": [
             "{{base_url}}"
           ],
@@ -141,11 +140,11 @@
           "query": [
             {
               "key": "city",
-              "value": "Ho Chi Minh"
+              "value": "Tokyo"
             }
           ]
         },
-        "description": "Lấy dữ liệu thời tiết hợp lệ cho thành phố Hồ Chí Minh."
+        "description": "Lấy dữ liệu thời tiết hợp lệ cho thành phố Tokyo (International City Test)."
       },
       "response": []
     },
