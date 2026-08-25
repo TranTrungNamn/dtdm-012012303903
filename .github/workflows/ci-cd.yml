@@ -28,16 +28,14 @@ jobs:
 
       - name: Start Web Server and Run Newman Tests
         env:
+          PORT: 3000
           OPENWEATHER_API_KEY: ${{ secrets.OPENWEATHER_API_KEY }}
         run: |
-          cp .env.example .env
-          if [ -n "$OPENWEATHER_API_KEY" ]; then
-            sed -i "s/your_openweather_api_key_here/$OPENWEATHER_API_KEY/" .env
-          fi
-          npm install -g newman
           node server.js &
-          sleep 4
+          SERVER_PID=$!
+          sleep 3
           npx newman run tests/Postman_Collection.json -e tests/Postman_Environment_Local.json
+          kill $SERVER_PID || true
 
   deploy-to-render:
     needs: lint-and-test
