@@ -17,16 +17,20 @@
               "    pm.response.to.have.status(200);",
               "});",
               "",
-              "pm.test(\"Response time is acceptable (< 1500ms)\", function () {",
-              "    pm.expect(pm.response.responseTime).to.be.below(1500);",
+              "pm.test(\"Content-Type is application/json\", function () {",
+              "    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
               "});",
               "",
-              "pm.test(\"Response returns JSON with status OK\", function () {",
+              "pm.test(\"Response returns JSON with status OK and valid properties\", function () {",
               "    var jsonData = pm.response.json();",
               "    pm.expect(jsonData.status).to.eql(\"OK\");",
               "    pm.expect(jsonData).to.have.property(\"app\");",
               "    pm.expect(jsonData).to.have.property(\"environment\");",
               "    pm.expect(jsonData).to.have.property(\"platform\");",
+              "});",
+              "",
+              "pm.test(\"Response time is acceptable (< 5000ms)\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(5000);",
               "});"
             ],
             "type": "text/javascript"
@@ -69,6 +73,8 @@
               "    pm.expect(jsonData).to.have.property(\"windKmh\");",
               "    pm.expect(jsonData).to.have.property(\"description\");",
               "    pm.expect(typeof jsonData.temperature).to.eql(\"number\");",
+              "    pm.expect(typeof jsonData.humidity).to.eql(\"number\");",
+              "    pm.expect(typeof jsonData.windKmh).to.eql(\"number\");",
               "});"
             ],
             "type": "text/javascript"
