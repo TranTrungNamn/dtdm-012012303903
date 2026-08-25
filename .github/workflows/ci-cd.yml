@@ -32,7 +32,7 @@ jobs:
           npm install -g newman
           node server.js &
           sleep 3
-          newman run tests/Postman_Collection.json -e tests/Postman_Environment_Local.json
+          npx newman run tests/Postman_Collection.json -e tests/Postman_Environment_Local.json
 
   deploy-to-render:
     needs: lint-and-test

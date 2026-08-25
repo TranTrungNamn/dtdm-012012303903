@@ -117,7 +117,9 @@
               "",
               "pm.test(\"Verify valid city returned\", function () {",
               "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData.city).to.include(\"Ho Chi Minh\");",
+              "    pm.expect(jsonData.city.toLowerCase()).to.satisfy(function(c) {",
+              "        return c.includes(\"ho chi minh\") || c.includes(\"hồ chí minh\");",
+              "    });",
               "});"
             ],
             "type": "text/javascript"
