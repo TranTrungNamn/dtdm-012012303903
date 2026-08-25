@@ -13,7 +13,7 @@ app.get("/api/health", (req, res) => {
     status: "OK",
     app: process.env.APP_NAME || "Cloud API Portal",
     environment: process.env.NODE_ENV || process.env.APP_ENV || "development",
-    platform: process.env.RENDER ? "Render" : "Local"
+    platform: process.env.RENDER ? "Render" : "Local",
   });
 });
 
@@ -26,7 +26,9 @@ app.get("/api/weather", async (req, res) => {
 
   const apiKey = process.env.OPENWEATHER_API_KEY;
   if (!apiKey) {
-    return res.status(500).json({ error: "Server chưa cấu hình OPENWEATHER_API_KEY" });
+    return res
+      .status(500)
+      .json({ error: "Server chưa cấu hình OPENWEATHER_API_KEY" });
   }
 
   try {
@@ -37,7 +39,9 @@ app.get("/api/weather", async (req, res) => {
       if (response.status === 404) {
         return res.status(404).json({ error: "Không tìm thấy thành phố" });
       }
-      return res.status(502).json({ error: "Không lấy được dữ liệu thời tiết" });
+      return res
+        .status(502)
+        .json({ error: "Không lấy được dữ liệu thời tiết" });
     }
 
     const data = await response.json();
@@ -47,7 +51,7 @@ app.get("/api/weather", async (req, res) => {
       humidity: data.main.humidity,
       windKmh: Math.round(data.wind.speed * 3.6),
       description: data.weather?.[0]?.description || "",
-      icon: data.weather?.[0]?.icon || null
+      icon: data.weather?.[0]?.icon || null,
     });
   } catch (error) {
     console.error(error);
@@ -56,5 +60,33 @@ app.get("/api/weather", async (req, res) => {
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
+  const env = process.env.NODE_ENV || "development";
+  const localUrl = `http://localhost:${PORT}`;
+  const networkUrl = `http://0.0.0.0:${PORT}`;
+
+  const rows = [
+    ["Local URL", `\x1b[34m${localUrl}\x1b[0m`, localUrl],
+    ["Network URL", `\x1b[34m${networkUrl}\x1b[0m`, networkUrl],
+    ["Environment", `\x1b[33m${env}\x1b[0m`, env],
+    ["Port", `\x1b[35m${PORT}\x1b[0m`, String(PORT)],
+  ];
+
+  const col1W = 14;
+  const col2W = 32;
+  const totalW = col1W + col2W + 3; // 49 chars inside box
+
+  const title = "BTL DIEN TOAN DAM MAY - NHOM 5";
+  const titlePad = totalW - title.length;
+
+  console.log("\n\x1b[36m┌" + "─".repeat(col1W + 2) + "┬" + "─".repeat(col2W + 2) + "┐\x1b[0m");
+  console.log(`\x1b[36m│\x1b[0m \x1b[1m\x1b[32m${title}\x1b[0m` + " ".repeat(titlePad + 1) + "\x1b[36m│\x1b[0m");
+  console.log("\x1b[36m├" + "─".repeat(col1W + 2) + "┼" + "─".repeat(col2W + 2) + "┤\x1b[0m");
+
+  for (const [col1, col2Colored, col2Raw] of rows) {
+    const p1 = " ".repeat(Math.max(0, col1W - col1.length));
+    const p2 = " ".repeat(Math.max(0, col2W - col2Raw.length));
+    console.log(`\x1b[36m│\x1b[0m \x1b[1m${col1}\x1b[0m${p1} \x1b[36m│\x1b[0m ${col2Colored}${p2} \x1b[36m│\x1b[0m`);
+  }
+
+  console.log("\x1b[36m└" + "─".repeat(col1W + 2) + "┴" + "─".repeat(col2W + 2) + "┘\x1b[0m\n");
 });
