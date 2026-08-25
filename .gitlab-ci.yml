@@ -1,0 +1,67 @@
+# =============================================================================
+# GitLab CI/CD Pipeline - Điện toán đám mây (Nhóm 5)
+# Môn học: [012012303903] - Điện toán đám mây - CNS_CS1
+# =============================================================================
+
+stages:
+  - lint_and_build
+  - test
+  - deploy
+
+default:
+  image: node:20-alpine
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - node_modules/
+
+# -----------------------------------------------------------------------------
+# 1. Giai đoạn Lint & Kiểm tra cú pháp + Cài đặt dependencies
+# -----------------------------------------------------------------------------
+lint_and_build:
+  stage: lint_and_build
+  script:
+    - echo "=== [CI] Cài đặt dependencies và kiểm tra mã nguồn ==="
+    - npm ci || npm install
+    - echo "=== [CI] Kiểm tra cú pháp server.js ==="
+    - node -c server.js
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+# -----------------------------------------------------------------------------
+# 2. Giai đoạn Test tự động bằng Newman (Postman Collection)
+# -----------------------------------------------------------------------------
+automated_api_testing:
+  stage: test
+  before_script:
+    - npm install -g newman
+    - cp .env.example .env
+  script:
+    - echo "=== [CI] Khởi động Web Server ngầm để kiểm thử ==="
+    - node server.js &
+    - SERVER_PID=$!
+    - sleep 3
+    - echo "=== [CI] Chạy bộ kiểm thử tự động Postman/Newman ==="
+    - newman run tests/Postman_Collection.json -e tests/Postman_Environment_Local.json
+    - kill $SERVER_PID || true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+
+# -----------------------------------------------------------------------------
+# 3. Giai đoạn Deploy tự động lên Render qua Deploy Hook
+# -----------------------------------------------------------------------------
+deploy_to_render:
+  stage: deploy
+  image: curlimages/curl:latest
+  before_script: []
+  script:
+    - echo "=== [CD] Kích hoạt Deploy lên nền tảng Cloud PaaS Render ==="
+    - |
+      if [ -n "$RENDER_DEPLOY_HOOK_URL" ]; then
+        curl -X POST "$RENDER_DEPLOY_HOOK_URL"
+        echo -e "\n✅ Kích hoạt Render Deploy Hook thành công!"
+      else
+        echo "ℹ️ RENDER_DEPLOY_HOOK_URL chưa được cấu hình (Render sẽ tự động deploy qua cơ chế Auto-Deploy của GitLab repo)."
+      fi
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'

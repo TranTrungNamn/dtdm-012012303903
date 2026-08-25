@@ -1,0 +1,52 @@
+name: CI/CD Pipeline - Nhom 5
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  lint-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: ⚙️ Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: 📦 Install dependencies
+        run: npm ci || npm install
+
+      - name: 🔍 Syntax check (server.js)
+        run: node -c server.js
+
+      - name: 🚀 Start Web Server & Run Newman Tests
+        run: |
+          cp .env.example .env
+          npm install -g newman
+          node server.js &
+          sleep 3
+          newman run tests/Postman_Collection.json -e tests/Postman_Environment_Local.json
+
+  deploy-to-render:
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+      - name: 🚀 Trigger Render Deploy Hook
+        env:
+          RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -n "$RENDER_DEPLOY_HOOK_URL" ]; then
+            curl -X POST "$RENDER_DEPLOY_HOOK_URL"
+            echo "✅ Kích hoạt Render Deploy Hook thành công!"
+          else
+            echo "ℹ️ Render tự động deploy khi có commit mới trên GitHub branch main."
+          fi

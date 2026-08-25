@@ -1,0 +1,225 @@
+{
+  "info": {
+    "_postman_id": "c6239bc7-7043-4a3d-b452-192a548231ef",
+    "name": "Cloud_PaaS_App_Testing_Collection",
+    "description": "Collection kiểm thử tự động toàn diện cho ứng dụng Web/API PaaS (Node.js/Express) trên Render và Local.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Health Check API",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Response time is acceptable (< 1500ms)\", function () {",
+              "    pm.expect(pm.response.responseTime).to.be.below(1500);",
+              "});",
+              "",
+              "pm.test(\"Response returns JSON with status OK\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.status).to.eql(\"OK\");",
+              "    pm.expect(jsonData).to.have.property(\"app\");",
+              "    pm.expect(jsonData).to.have.property(\"environment\");",
+              "    pm.expect(jsonData).to.have.property(\"platform\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/health",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "health"
+          ]
+        },
+        "description": "Kiểm tra tình trạng hoạt động của Web Server, tên ứng dụng và nền tảng đang chạy (Render/Local)."
+      },
+      "response": []
+    },
+    {
+      "name": "2. Weather API - Success (Hanoi)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Verify weather payload data fields\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData).to.have.property(\"city\");",
+              "    pm.expect(jsonData).to.have.property(\"temperature\");",
+              "    pm.expect(jsonData).to.have.property(\"humidity\");",
+              "    pm.expect(jsonData).to.have.property(\"windKmh\");",
+              "    pm.expect(jsonData).to.have.property(\"description\");",
+              "    pm.expect(typeof jsonData.temperature).to.eql(\"number\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/weather?city=Hanoi",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "weather"
+          ],
+          "query": [
+            {
+              "key": "city",
+              "value": "Hanoi"
+            }
+          ]
+        },
+        "description": "Lấy dữ liệu thời tiết hợp lệ cho thành phố Hà Nội."
+      },
+      "response": []
+    },
+    {
+      "name": "3. Weather API - Success (Ho Chi Minh)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 200 OK\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test(\"Verify valid city returned\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.city).to.include(\"Ho Chi Minh\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/weather?city=Ho Chi Minh",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "weather"
+          ],
+          "query": [
+            {
+              "key": "city",
+              "value": "Ho Chi Minh"
+            }
+          ]
+        },
+        "description": "Lấy dữ liệu thời tiết hợp lệ cho thành phố Hồ Chí Minh."
+      },
+      "response": []
+    },
+    {
+      "name": "4. Weather API - Missing City Param (400 Bad Request)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 400 Bad Request\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test(\"Returns validation error message\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error).to.eql(\"Vui lòng nhập tên thành phố\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/weather",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "weather"
+          ]
+        },
+        "description": "Kiểm thử trường hợp người dùng không truyền tham số city."
+      },
+      "response": []
+    },
+    {
+      "name": "5. Weather API - City Not Found (404 Not Found)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test(\"Status code is 404 Not Found\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "pm.test(\"Returns not found error message\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.error).to.eql(\"Không tìm thấy thành phố\");",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/weather?city=ThanhPhoKhongTonTai12345",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "api",
+            "weather"
+          ],
+          "query": [
+            {
+              "key": "city",
+              "value": "ThanhPhoKhongTonTai12345"
+            }
+          ]
+        },
+        "description": "Kiểm thử trường hợp nhập tên thành phố không có thực trong hệ thống."
+      },
+      "response": []
+    }
+  ]
+}
